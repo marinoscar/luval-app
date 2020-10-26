@@ -7,7 +7,7 @@ namespace Luval.Data
 {
     public class SqlTableSchema : EntitySchema
     {
-        public static SqlTableSchema Load(Type type)
+        public static EntitySchema Load(Type type)
         {
             var columns = new List<FieldSchema>();
             foreach (var prop in type.GetProperties())

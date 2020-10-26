@@ -1,4 +1,5 @@
-﻿using System;
+﻿using luval.data.sink.Tests;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,8 @@ namespace luval.data.sink
         /// <param name="arguments"></param>
         static void DoAction(ConsoleSwitches arguments)
         {
-            
+            var userTest = new WhenUserIsCreated();
+            userTest.ItShouldWork();
         }
 
         /// <summary>

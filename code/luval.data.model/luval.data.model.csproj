@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>luval.data.model</AssemblyName>
+    <RootNamespace>Luval.Data.Model</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\luval.core\luval.core.csproj" />
+    <ProjectReference Include="..\luval.data\luval.data.csproj" />
+  </ItemGroup>
+
+</Project>

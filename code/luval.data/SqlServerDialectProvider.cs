@@ -12,12 +12,12 @@ namespace Luval.Data
 {
     public class SqlServerDialectProvider : ISqlDialectProvider
     {
-        public SqlServerDialectProvider(SqlTableSchema schema)
+        public SqlServerDialectProvider(EntitySchema schema)
         {
             Schema = schema;
         }
 
-        public SqlTableSchema Schema { get; private set; }
+        public EntitySchema Schema { get; private set; }
 
         public string GetCreateCommand(IDataRecord record)
         {
@@ -76,14 +76,14 @@ namespace Luval.Data
 
         private IEnumerable<string> GetKeyWhereStatement(IDataRecord record)
         {
-            if (!Schema.Columns.Any(i => i.IsPrimaryKey))
+            if (!Schema.Fields.Any(i => i.IsPrimaryKey))
                 throw new InvalidDataException("At least one primary key column is required");
             return GetColumnValuePair(record, i => i.IsPrimaryKey);
         }
 
-        private IEnumerable<string> GetColumnValuePair(IDataRecord record, Func<SqlColumnSchema, bool> predicate)
+        private IEnumerable<string> GetColumnValuePair(IDataRecord record, Func<FieldSchema, bool> predicate)
         {
-            return Schema.Columns.Where(predicate)
+            return Schema.Fields.Where(predicate)
                 .Select(i =>
                 {
                     var val = record[i.Name];
@@ -98,10 +98,10 @@ namespace Luval.Data
             return GetEntityValues(record, i => !i.IsIdentity).Select(i => i.ToSql());
         }
 
-        private IEnumerable<object> GetEntityValues(IDataRecord record, Func<SqlColumnSchema, bool> predicate)
+        private IEnumerable<object> GetEntityValues(IDataRecord record, Func<FieldSchema, bool> predicate)
         {
             var res = new List<object>();
-            Schema.Columns.Where(predicate).ToList().ForEach(i => res.Add(record[i.Name]));
+            Schema.Fields.Where(predicate).ToList().ForEach(i => res.Add(record[i.Name]));
             return res;
         }
 
@@ -110,14 +110,14 @@ namespace Luval.Data
             return string.Format("[{0}]", Schema.Name);
         }
 
-        private string GetSqlFormattedColumnName(SqlColumnSchema columnSchema)
+        private string GetSqlFormattedColumnName(FieldSchema columnSchema)
         {
             return string.Format("[{0}]", columnSchema.Name);
         }
 
-        private IEnumerable<string> GetSqlFormattedColumnNames(Func<SqlColumnSchema, bool> predicate)
+        private IEnumerable<string> GetSqlFormattedColumnNames(Func<FieldSchema, bool> predicate)
         {
-            return Schema.Columns.Where(predicate).Select(GetSqlFormattedColumnName);
+            return Schema.Fields.Where(predicate).Select(GetSqlFormattedColumnName);
         }
 
         public string GetSqlDataType(Type type, int size)

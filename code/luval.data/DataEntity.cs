@@ -13,38 +13,45 @@ namespace Luval.Data
             Id = Guid.NewGuid().ToString();
             UtcUpdatedOn = DateTime.UtcNow;
             UtcCreatedOn = UtcUpdatedOn;
-            UserId = GetUserName();
+            CreatedBy = GetUserName();
+            UpdatedBy = CreatedBy;
         }
 
         private static string GetUserName()
         {
             if (Thread.CurrentPrincipal == null || Thread.CurrentPrincipal.Identity == null) return "N/A";
-            return Thread.CurrentPrincipal.Identity.Name; 
+            return string.IsNullOrWhiteSpace(Thread.CurrentPrincipal.Identity.Name) ? "N/A" : Thread.CurrentPrincipal.Identity.Name; 
         }
 
         [PrimaryKey]
         public string Id
         {
-            get { return Convert.ToString(this["Id"]); }
+            get { return CastValue<string>("Id"); }
             set { this["Id"] = value; }
         }
 
         public DateTime UtcUpdatedOn
         {
-            get { return Convert.ToDateTime(this["UtcUpdatedOn"]); }
+            get { return CastValue<DateTime>("UtcUpdatedOn"); }
             set { this["UtcUpdatedOn"] = value; }
         }
 
         public DateTime UtcCreatedOn
         {
-            get { return Convert.ToDateTime(this["UtcCreatedOn"]); }
+            get { return CastValue<DateTime>("UtcCreatedOn"); }
             set { this["UtcCreatedOn"] = value; }
         }
 
-        public string UserId
+        public string CreatedBy
         {
-            get { return Convert.ToString(this["UserId"]); }
-            set { this["UserId"] = value; }
+            get { return CastValue<string>("CreatedBy"); }
+            set { this["CreatedBy"] = value; }
+        }
+
+        public string UpdatedBy
+        {
+            get { return CastValue<string>("UpdatedBy"); }
+            set { this["UpdatedBy"] = value; }
         }
     }
 }

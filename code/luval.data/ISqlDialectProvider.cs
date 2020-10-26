@@ -5,7 +5,7 @@ namespace Luval.Data
 {
     public interface ISqlDialectProvider
     {
-        SqlTableSchema Schema { get; }
+        EntitySchema Schema { get; }
         string GetCreateCommand(IDataRecord record);
         string GetReadCommand(IDataRecord record);
         string GetUpdateCommand(IDataRecord record);

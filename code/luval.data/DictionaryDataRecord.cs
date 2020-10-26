@@ -12,14 +12,14 @@ namespace Luval.Data
 {
     public class DictionaryDataRecord : IDataRecord, IDictionary<string, object>
     {
-        private readonly Dictionary<string, object> _record;
+        private readonly IDictionary<string, object> _record;
 
         public DictionaryDataRecord()
         {
             _record = new Dictionary<string, object>();
         }
 
-        public DictionaryDataRecord(Dictionary<string, object> record)
+        public DictionaryDataRecord(IDictionary<string, object> record)
         {
             _record = record;
         }
@@ -37,18 +37,36 @@ namespace Luval.Data
 
         }
 
+        protected virtual T CastValue<T>(int index)
+        {
+            return CastValue<T>(GetName(index));
+        }
+
+        protected virtual T CastValue<T>(string name)
+        {
+            if (!_record.ContainsKey(name)) return default(T);
+            return (T)Convert.ChangeType(_record[name], typeof(T));
+        }
+
+        [NotMapped]
         public object this[int i] => GetValue(i);
 
-        public object this[string name] { get => _record[name]; set => _record[name] = value;  }
+        [NotMapped]
+        public object this[string name] { get => CastValue<object>(name); set => _record[name] = value;  }
 
+        [NotMapped]
         public int FieldCount => _record.Keys.Count;
 
+        [NotMapped]
         public ICollection<string> Keys => _record.Keys;
 
+        [NotMapped]
         public ICollection<object> Values => _record.Values;
 
+        [NotMapped]
         public int Count => _record.Count;
 
+        [NotMapped]
         public bool IsReadOnly => false;
 
         public bool GetBoolean(int i)
@@ -150,7 +168,7 @@ namespace Luval.Data
 
         public object GetValue(int i)
         {
-            return _record[GetName(i)];
+            return this[GetName(i)];
         }
 
         public int GetValues(object[] values)
